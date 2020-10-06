@@ -60,6 +60,7 @@ class SodiumEncryptionContext final {
   ///
   /// \return \e std::errc::invalid_argument if the key or header length
   /// is wrong.
+  [[nodiscard]]
   std::error_code Initialize(const byte* key, size_t key_length,
                              byte* header, size_t header_length) noexcept;
 
@@ -71,6 +72,7 @@ class SodiumEncryptionContext final {
   /// \return Either error code or the header.
   ///
   /// More info at \ref Initialize_doc Initialize().
+  [[nodiscard]]
   inline std::variant<std::error_code, Bytes> Initialize(const Bytes& key) {
     auto header = Bytes(NA_SS_HEADERBYTES);
     auto ec = Initialize(key.data(), key.size(),
@@ -90,6 +92,7 @@ class SodiumEncryptionContext final {
   /// \return \e std::errc::operation_not_permitted if the context is
   /// uninitialized.
   /// \return \e std::errc::invalid_argument if \e output is too short.
+  [[nodiscard]]
   std::error_code Encrypt(const byte* input, size_t input_length,
                           byte* output, size_t output_length) noexcept;
 
@@ -97,6 +100,7 @@ class SodiumEncryptionContext final {
   /// resized to fit the ciphertext perfectly.
   ///
   /// \return More info at \ref Encrypt_doc Encrypt().
+  [[nodiscard]]
   inline std::error_code Encrypt(const Bytes& input, Bytes& output) noexcept {
     output.resize(input.size() + NA_SS_ABYTES);
     return Encrypt(input.data(), input.size(), output.data(), output.size());
@@ -106,6 +110,7 @@ class SodiumEncryptionContext final {
   ///
   /// \return Either an error code or resulting cyphertext.
   /// More info at \ref Encrypt_doc Encrypt().
+  [[nodiscard]]
   inline std::variant<std::error_code, Bytes> Encrypt(const Bytes& input) {
     Bytes output(input.size() + NA_SS_ABYTES);
     auto ec = Encrypt(input.data(), input.size(),
@@ -126,6 +131,7 @@ class SodiumEncryptionContext final {
   /// \return \e std::errc::operation_not_permitted if the context is not
   /// initialized
   /// \return \e std::errc::invalid_argument if \e output is too short.
+  [[nodiscard]]
   std::error_code Finish(byte* output, size_t output_length) noexcept;
 
   /// Get the finishing message to end the stream. This will render this
@@ -133,6 +139,7 @@ class SodiumEncryptionContext final {
   ///
   /// \return Either an error code or the message.
   /// More info at \ref Finish_doc Finish().
+  [[nodiscard]]
   inline std::variant<std::error_code, Bytes> Finish() {
     Bytes output(NA_SS_ABYTES);
     auto ec = Finish(output.data(), output.size());
@@ -142,6 +149,7 @@ class SodiumEncryptionContext final {
 
   /// Check if the context is initialized. If it's not, \ref Encrypt() and
   /// \ref Finish() methods won't work.
+  [[nodiscard]]
   inline bool Initialized() const noexcept {
     return initialized_;
   }
@@ -190,6 +198,7 @@ class SodiumDecryptionContext final {
   ///
   /// \return \e std::errc::invalid_argument if \e key or \e header don't have
   /// required lengths or if the \e header is invalid.
+  [[nodiscard]]
   std::error_code Initialize(
       const byte* key, size_t key_length,
       const byte* header, size_t header_length) noexcept;
@@ -199,6 +208,7 @@ class SodiumDecryptionContext final {
   ///
   /// \return Error code if something's wrong.
   /// More info at \ref Initialize_doc Initialize().
+  [[nodiscard]]
   inline std::error_code Initialize(const Bytes& key, const Bytes& header)
       noexcept {
     return Initialize(key.data(), key.size(), header.data(), header.size());
@@ -226,12 +236,14 @@ class SodiumDecryptionContext final {
   /// invalid, incomplete or corrupt.
   /// \return \e std::errc::connection_aborted if \e input stores a finishing
   /// message.
+  [[nodiscard]]
   std::error_code Decrypt(const byte* input, size_t input_length,
                           byte* output, size_t output_length) noexcept;
 
   /// Decrypt \e input and store the result in \e output.
   ///
   /// More info at \ref Decrypt_doc Decrypt().
+  [[nodiscard]]
   std::error_code Decrypt(const Bytes& input, Bytes& output) noexcept;
 
   /// Decrypt \e input.
@@ -239,6 +251,7 @@ class SodiumDecryptionContext final {
   /// More info at \ref Decrypt_doc Decrypt().
   ///
   /// \return Either an error code or decrypted bytes.
+  [[nodiscard]]
   inline std::variant<std::error_code, Bytes> Decrypt(const Bytes& input) {
     Bytes output(input.size());
     auto ec = Decrypt(input, output);
@@ -248,6 +261,7 @@ class SodiumDecryptionContext final {
 
   /// Check if the context is initialized. If it's not, \ref Decrypt() method
   /// won't work.
+  [[nodiscard]]
   inline bool Initialized() const noexcept {
     return initialized_;
   }
