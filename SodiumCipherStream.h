@@ -1,5 +1,5 @@
-#ifndef SSW_SODIUM_CIPHER_STREAM_H
-#define SSW_SODIUM_CIPHER_STREAM_H
+#ifndef SCS_SODIUM_CIPHER_STREAM_H
+#define SCS_SODIUM_CIPHER_STREAM_H
 
 #include <cassert>
 #include <variant>
@@ -258,4 +258,4 @@ class SodiumDecryptionContext final {
 };
 }
 
-#endif // SSW_SODIUM_CIPHER_STREAM_H
+#endif // SCS_SODIUM_CIPHER_STREAM_H
