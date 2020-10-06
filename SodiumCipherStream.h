@@ -1,6 +1,7 @@
 #ifndef SCS_SODIUM_CIPHER_STREAM_H
 #define SCS_SODIUM_CIPHER_STREAM_H
 
+#include <array>
 #include <cassert>
 #include <variant>
 #include <vector>
@@ -13,12 +14,14 @@ namespace crypto {
 using byte = unsigned char;
 using Bytes = std::vector<byte>;
 
-static const auto
+static constexpr auto
 NA_SS_ABYTES = crypto_secretstream_xchacha20poly1305_ABYTES;
-static const auto
+static constexpr auto
 NA_SS_KEYBYTES = crypto_secretstream_xchacha20poly1305_KEYBYTES;
-static const auto
+static constexpr auto
 NA_SS_HEADERBYTES = crypto_secretstream_xchacha20poly1305_HEADERBYTES;
+
+using CryptoHeader = std::array<byte, NA_SS_HEADERBYTES>;
 
 /// Fist method to call MUST be /ref Initialize(). It will return the header
 /// that the peer will need in order to decrypt data encrypted here.
