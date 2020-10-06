@@ -27,3 +27,15 @@ libsodium_dep = dependency('libsodium')
 static_library('SodiumCipherStream',
 	       sources: 'SodiumCipherStream.cpp',
 	       dependencies: libsodium_dep)
+
+# Tests
+gtest = meson.get_compiler('cpp').find_library('gtest', required: false)
+if gtest.found()
+  test_all = executable('test_all',
+			sources: ['test/main.cpp',
+				  'test/SodiumCipherStream-test.cpp',
+				  'SodiumCipherStream.cpp'],
+			dependencies: [gtest, libsodium_dep])
+
+  test('all', test_all)
+endif
