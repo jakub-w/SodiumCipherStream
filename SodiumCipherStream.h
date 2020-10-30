@@ -256,7 +256,7 @@ class SodiumDecryptionContext final {
   /// \return Either an error code or decrypted bytes.
   [[nodiscard]]
   inline std::variant<std::error_code, Bytes> Decrypt(const Bytes& input) {
-    Bytes output(input.size());
+    Bytes output(input.size() - NA_SS_ABYTES);
     auto ec = Decrypt(input, output);
     if (ec) return ec;
     else return output;
