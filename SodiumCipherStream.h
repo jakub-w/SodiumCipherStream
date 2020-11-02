@@ -99,6 +99,19 @@ class SodiumEncryptionContext final {
   std::error_code Encrypt(const byte* input, size_t input_length,
                           byte* output, size_t output_length) noexcept;
 
+  /// Encrypt \e input with size \e length.
+  ///
+  /// \return Either and error code or the resulting ciphertext.
+  /// More info at \ref Encrypt_doc Encrypt().
+  [[nodiscard]]
+  inline std::variant<std::error_code, Bytes> Encrypt(const byte* input,
+                                                      size_t length) {
+    Bytes output(length + NA_SS_ABYTES);
+    auto ec = Encrypt(input, length, output.data(), output.size());
+    if (ec) return ec;
+    else return output;
+  }
+
   /// Encrypt \e input and store it in the \e output. The \e output will be
   /// resized to fit the ciphertext perfectly.
   ///
@@ -242,6 +255,19 @@ class SodiumDecryptionContext final {
   [[nodiscard]]
   std::error_code Decrypt(const byte* input, size_t input_length,
                           byte* output, size_t output_length) noexcept;
+
+  /// Decrypt \e input with size \e length.
+  ///
+  /// \return Either and error code or the resulting cleartext.
+  /// More info at \ref Decrypt_doc Decrypt().
+  [[nodiscard]]
+  inline std::variant<std::error_code, Bytes> Decrypt(const byte* input,
+                                                      size_t length) {
+    Bytes output(length - NA_SS_ABYTES);
+    auto ec = Decrypt(input, length, output.data(), output.size());
+    if (ec) return ec;
+    else return output;
+  }
 
   /// Decrypt \e input and store the result in \e output.
   ///
