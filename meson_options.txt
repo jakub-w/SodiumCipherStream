@@ -1,0 +1,2 @@
+option('static', type: 'boolean', value: false,
+       description: 'Compile a static library instead of dynamic')

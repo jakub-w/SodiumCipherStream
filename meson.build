@@ -24,9 +24,15 @@ endif
 libsodium_dep = dependency('libsodium')
 
 # Binaries
-static_library('SodiumCipherStream',
-	       sources: 'SodiumCipherStream.cpp',
-	       dependencies: libsodium_dep)
+if get_option('static')
+  libscs_static = static_library('SodiumCipherStream',
+				 sources: 'SodiumCipherStream.cpp',
+				 dependencies: libsodium_dep)
+else
+  libscs = shared_library('SodiumCipherStream',
+			  sources: 'SodiumCipherStream.cpp',
+			  dependencies: libsodium_dep)
+endif
 
 # Tests
 gtest = meson.get_compiler('cpp').find_library('gtest', required: false)
