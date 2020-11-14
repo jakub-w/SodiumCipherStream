@@ -299,6 +299,62 @@ class SodiumDecryptionContext final {
   crypto_secretstream_xchacha20poly1305_state state_;
   bool initialized_ = false;
 };
+
+class SodiumCryptoContext final {
+ public:
+  SodiumCryptoContext() = default;
+
+  SodiumCryptoContext(SodiumCryptoContext&&) = default;
+  SodiumCryptoContext& operator=(SodiumCryptoContext&&) = default;
+
+  SodiumCryptoContext(const SodiumCryptoContext&) = delete;
+  SodiumCryptoContext& operator=(const SodiumCryptoContext&) = delete;
+
+  ~SodiumCryptoContext() = default;
+
+  template <typename... Args, typename Result>
+  [[nodiscard]]
+  inline Result InitializeEncryption(Args... args) {
+    return encryption_ctx_.Initialize(args...);
+  }
+
+  template <typename... Args, typename Result>
+  [[nodiscard]]
+  inline Result InitializeDecryption(Args... args) {
+    return decryption_ctx_.Initialize(args...);
+  }
+
+  template <typename... Args, typename Result>
+  [[nodiscard]]
+  inline Result Encrypt(Args... args) {
+    return encryption_ctx_.Encrypt(args...);
+  }
+
+  template <typename... Args, typename Result>
+  [[nodiscard]]
+  inline Result Decrypt(Args... args) {
+    return decryption_ctx_.Decrypt(args...);
+  }
+
+  [[nodiscard]]
+  inline bool Initialized() const {
+    return encryption_ctx_.Initialized() && decryption_ctx_.Initialized();
+  }
+
+  [[nodiscard]]
+  inline bool EncryptionInitialized() const {
+    return encryption_ctx_.Initialized();
+  }
+
+  [[nodiscard]]
+  inline bool DecryptionInitialized() const {
+    return decryption_ctx_.Initialized();
+  }
+
+ private:
+  SodiumEncryptionContext encryption_ctx_;
+  SodiumDecryptionContext decryption_ctx_;
+};
 }
 
 #endif // SCS_SODIUM_CIPHER_STREAM_H
