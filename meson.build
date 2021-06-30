@@ -1,5 +1,5 @@
 project('SodiumCipherStream', 'cpp',
-        default_options: ['cpp_std=c++17'])
+        default_options: ['cpp_std=c++20'])
 
 # Build types
 if get_option('buildtype').startswith('debug')
@@ -40,7 +40,9 @@ if gtest.found()
   test_all = executable('test_all',
 			sources: ['test/main.cpp',
 				  'test/SodiumCipherStream-test.cpp',
-				  'SodiumCipherStream.cpp'],
+				  'test/AsyncCipherStream-test.cpp',
+				  'SodiumCipherStream.cpp',
+				  'AsyncCipherStream.cpp'],
 			dependencies: [gtest, libsodium_dep])
 
   test('all', test_all)
