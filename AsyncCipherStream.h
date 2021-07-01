@@ -60,12 +60,15 @@ class AsyncCipherStream {
   ///
   /// \param[in] input Array of plain bytes to be encrypted. It's size must be
   /// bigger than 0.
+  ///
   /// \param[out] output Place to store the result. Its size must be at least
-  /// \param[in] op_id Operation ID. Must be unique for every Encrypt-Decrypt
-  /// operation. The same \e op_id has to be used when decrypting.
   /// \verbatim input.size() + ABYTES \endverbatim. The final size of the
   /// output is returned so that the size of the container storing it may be
-  /// adjusted.
+  /// adjusted. Can overlap with \e input.
+  ///
+  /// \param[in] op_id Operation ID. Must be unique for every Encrypt-Decrypt
+  /// operation. The same \e op_id has to be used when decrypting.
+  ///
   /// \return Final size of the output. It may be shorter than
   /// \e output.size().
   /// \return \e std::errc::invalid_argument if \e output or \e input is too
@@ -115,12 +118,15 @@ class AsyncCipherStream {
   ///
   /// \param[in] input Array of bytes to be decrypted. Must be larger than
   /// \ref ABYTES. Empty messages are disallowed.
+  ///
   /// \param[out] output Place to store the result. Its size must be at least
   /// \verbatim input.size() - ABYTES \endverbatim. The final size of the
   /// output is returned so that the size of the container storing it may be
-  /// adjusted.
+  /// adjusted. Can overlap with \e input.
+  ///
   /// \param[in] op_id Operation ID. Must be unique for every Encrypt-Decrypt
   /// operation. It has to be the same \e op_id that was used for encryption.
+  ///
   /// \return Final size of the output. It may be shorter than
   /// \e output.size().
   /// \return \e std::errc::invalid_argument if \e output is too short.

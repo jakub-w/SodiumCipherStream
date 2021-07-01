@@ -370,3 +370,28 @@ TEST(AsyncCipherStream, decrypt_wrong_output) {
     }
   }
 }
+
+TEST(AsyncCipherStream, encrypt_overlapping_input_output) {
+  AsyncCipherStream ctx(KEY, NONCE);
+  Bytes input(sizeof(message)-1 + AsyncCipherStream::ABYTES);
+  constexpr auto message_size = sizeof(message)-1;
+  std::copy_n(message, message_size, input.data());
+
+  auto enc_ret = ctx.Encrypt({input.data(), message_size}, input, OP_ID);
+
+  ASSERT_FALSE(std::holds_alternative<std::error_code>(enc_ret));
+  ASSERT_EQ(input, ENCRYPTED_MSG);
+}
+
+TEST(AsyncCipherStream, decrypt_overlapping_input_output) {
+  AsyncCipherStream ctx(KEY, NONCE);
+  Bytes input(ENCRYPTED_MSG);
+
+  auto dec_ret = ctx.Decrypt(input, input, OP_ID);
+
+  ASSERT_FALSE(std::holds_alternative<std::error_code>(dec_ret));
+
+  input.resize(std::get<size_t>(dec_ret));
+
+  ASSERT_TRUE(std::equal(input.begin(), input.end(), message));
+}
